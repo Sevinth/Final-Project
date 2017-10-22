@@ -5,6 +5,7 @@ class Node
 {
 public:
 	Node(Point2D, Point2D, std::vector<Particle>);
+	Node(Point2D, Point2D);
 	~Node();
 	
 	void attachChildNodes();
@@ -18,6 +19,7 @@ public:
 	double height;
 	
 	bool hasChildren{ false };
+	bool hasParticle{ false };
 	Point2D centMass{0.0,0.0};
 	std::vector<std::shared_ptr<Node>> childNodes;
 	std::vector<Particle> localParticles;

@@ -17,7 +17,6 @@ int main() {
 
 	nodeVec.resize(10);
 
-
 	std::vector<Particle> myParticles;
 	myParticles.resize(2);
 
@@ -37,6 +36,7 @@ int main() {
 
 	for (int i = 0; i < myNode.childNodes.size(); ++i) {
 		std::cout << "Children? " << myNode.childNodes[i]->hasChildren << std::endl;
+		std::cout << "Particle? " << myNode.childNodes[i]->hasParticle << std::endl;
 		std::cout << "Center of Mass: " << myNode.childNodes[i]->centMass.x << " " << myNode.childNodes[i]->centMass.y << std::endl;
 	}
 

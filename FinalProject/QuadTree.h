@@ -5,9 +5,10 @@
 class QuadTree
 {
 public:
-	QuadTree();
+	QuadTree(Point2D, Point2D, std::vector<Particle>);
+	QuadTree(Point2D, Point2D);
 	~QuadTree();
-	QuadTree(Point2D tl, Point2D br);
+
 
 	//Define Bounding box by upper left and lower right points
 	Point2D topLeft;
