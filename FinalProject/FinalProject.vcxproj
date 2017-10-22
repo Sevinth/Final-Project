@@ -18,6 +18,16 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
+    <ClCompile Include="Source.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="QuadTree.h" />
+    <ClInclude Include="std.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{deca2257-0597-4121-b4ec-f463e454f1db}</ProjectGuid>
@@ -83,10 +93,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(I_MPI_ROOT)\intel64\include</AdditionalIncludeDirectories>
+      <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(I_MPI_ROOT)\intel\64\lib\debug_mt</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(I_MPI_ROOT)\intel64\lib\debug_mt</AdditionalLibraryDirectories>
       <AdditionalDependencies>impi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>-g %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -115,9 +127,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Source.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
