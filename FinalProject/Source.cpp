@@ -7,9 +7,16 @@
 
 int main() {
 
+	const double MAX_GRID_X = 10;
+	const double MAX_GRID_Y = 10;
+	const double MIN_GRID_X = 0;
+	const double MIN_GRID_Y = 0;
+
+
 	std::random_device r;
 	std::default_random_engine engine(r());
-	std::uniform_real_distribution<double> dist(0, 10);
+	//Works fine for a square grid, if grid is rectangular need to create a new distribution
+	std::uniform_real_distribution<double> dist(MIN_GRID_X, MAX_GRID_X);
 	std::mt19937_64 e2;
 	//Setup initial quad tree.
 	QuadTree center(Point2D(0, 0), Point2D(0, 0));
@@ -18,25 +25,28 @@ int main() {
 	nodeVec.resize(10);
 
 	std::vector<Particle> myParticles;
-	myParticles.resize(2);
+	myParticles.resize(10);
+	std::cout << "Particles Created: " << std::endl;
+	for (size_t i = 0; i < myParticles.size(); ++i) {
+	
+		myParticles[i].pos.x = dist(engine);
+		myParticles[i].pos.y = dist(engine);
 
-	myParticles[0].pos.x = 2.0;
-	myParticles[0].pos.y = 4.0;
-	myParticles[1].pos.x = 5.1;
-	myParticles[1].pos.y = 7.5;
-	myParticles[0].mass = 5.0;
+		std::cout << myParticles[i].pos.x << "," << myParticles[i].pos.y << std::endl;
+	}
 
-	Point2D upperLeftGridPoint(0.0, 0.0);
-	Point2D bottomRightGridPoint(10.0, 10.0);
+
+	Point2D upperLeftGridPoint(MIN_GRID_X, MIN_GRID_Y);
+	Point2D bottomRightGridPoint(MAX_GRID_X, MAX_GRID_Y);
+
 
 	Node myNode(upperLeftGridPoint, bottomRightGridPoint, myParticles);
-
-	std::cout << myNode.centMass.x << " " << myNode.centMass.y << std::endl;
-	std::cout << "Children?" << myNode.hasChildren << std::endl;
 
 	for (int i = 0; i < myNode.childNodes.size(); ++i) {
 		std::cout << "Children? " << myNode.childNodes[i]->hasChildren << std::endl;
 		std::cout << "Particle? " << myNode.childNodes[i]->hasParticle << std::endl;
+		std::cout << "Number of Particles: " << myNode.localParticles.size() << std::endl;
+		std::cout << "Rank: " << myNode.childNodes[i]->rank << std::endl;
 		std::cout << "Center of Mass: " << myNode.childNodes[i]->centMass.x << " " << myNode.childNodes[i]->centMass.y << std::endl;
 	}
 

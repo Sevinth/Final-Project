@@ -14,6 +14,8 @@ public:
 	Point2D topLeft;
 	Point2D botRight;
 
+	std::shared_ptr<Node> TreeSearch();
+
 	std::shared_ptr<Node> rootNode;
 
 };

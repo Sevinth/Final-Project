@@ -4,7 +4,7 @@
 class Node
 {
 public:
-	Node(Point2D, Point2D, std::vector<Particle>);
+	Node(Point2D, Point2D, std::vector<Particle>, int _rank = 0);
 	Node(Point2D, Point2D);
 	~Node();
 	
@@ -17,7 +17,9 @@ public:
 
 	double width;
 	double height;
-	
+	double area;
+
+	int rank{ 0 };
 	bool hasChildren{ false };
 	bool hasParticle{ false };
 	Point2D centMass{0.0,0.0};
