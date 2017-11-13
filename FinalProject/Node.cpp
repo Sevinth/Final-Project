@@ -1,7 +1,14 @@
 #include "Node.h"
 #include <limits>
 
-
+Node::Node(Point2d _midPoint, double sideLength, std::vector<Particle> particleList, int _rank) {
+	
+	
+	std::vector<double> bounds = calculateBounding(_midPoint,sideLengt); 
+	
+	
+	
+}
 
 Node::Node(Point2D _upLeft, Point2D _boRight, std::vector<Particle> particleList, int _rank)
 {
@@ -49,30 +56,9 @@ Node::Node(Point2D _upLeft, Point2D _boRight, std::vector<Particle> particleList
 
 	//Only subdivide if there is more than one particle in the node
 	if (localParticles.size() > 1 && this->area > 0.0) {
-
-		//Create 4 subdivisions in this node of equation width & height
-		//Example Values: Initial Gird upLeft.x = 0, upLeft.y = 0, boRight.x = 10, boRight.y = 10;
-		// nwNode:  upLeft.x = 0, upLeft.y = 0; boRight.x = 5.0, boRight.y = 5.0
-		//swNode: upLeft.x = 0, upLeft.y = 5.0; boRight.x = 5.0, boRight.y = 10.0
-		//neNode: upLeft.x = 5, upLeft.y = 0; boRight.x = 10, boRight.y = 5
-		//seNode: upLeft.x = 5, upLeft.y = 5, boRight.x = 10, boRight.y = 10
-		//OutFile.open("Subdivision_Test.txt", std::ios::app);
-		////Calculate subdivision points
-		//OutFile << "Rank: " << rank << ", Area: " << area << std::endl;
-
-		Point2D nwULDim(upLeft.x, upLeft.y);
-		Point2D nwBRDim(boRight.x / 2.0, boRight.y / 2.0);
-
-		Point2D swULDim(upLeft.x, boRight.y / 2.0);
-		Point2D swBRDim(boRight.x / 2.0, boRight.y);
-
-		Point2D neULDim(boRight.x / 2.0, upLeft.y);
-		Point2D neBRDim(boRight.x, boRight.y / 2.0);
-
-		Point2D seULDim = nwBRDim;
-		Point2D seBRDim = boRight;
-
-
+		double sideLength;
+		std::vector<double> newMidPoints = subDivide(upLeft, boRight, sideLength);
+		
 		double massTotals = 0;
 		//Need reductions here
 		//#pragma omp parallel 
@@ -88,11 +74,16 @@ Node::Node(Point2D _upLeft, Point2D _boRight, std::vector<Particle> particleList
 			centMass.y += (localParticles[i].pos.y)*(localParticles[i].mass) / massTotals;
 		}
 	
-	Node nwNode(nwULDim, nwBRDim, localParticles, this->rank + 1);
-	Node swNode(swULDim, swBRDim, localParticles, this->rank + 1);
-	Node neNode(neULDim, neBRDim, localParticles, this->rank + 1);
-	Node seNode(seULDim, seBRDim, localParticles, this->rank + 1);
-
+	//Node nwNode(nwULDim, nwBRDim, localParticles, this->rank + 1);
+	//Node swNode(swULDim, swBRDim, localParticles, this->rank + 1);
+	//Node neNode(neULDim, neBRDim, localParticles, this->rank + 1);
+	//Node seNode(seULDim, seBRDim, localParticles, this->rank + 1);
+	Node nwNode(newMidPoints[0], sideLength, localParticles,  this->rank+1);
+	Node swNode(newMidPoints[1], sideLength, localParticles, this->rank+1);
+	Node neNode(newMidPoints[2], sideLength, localParticles, this-> rank+1);
+	Node seNode(newMidPoints[3], sideLength, localParticles, this->rank+1);
+		
+		
 	//Add nodes to the child node vector
 	childNodes.push_back(std::make_shared<Node>(neNode));
 	childNodes.push_back(std::make_shared<Node>(seNode));
@@ -142,10 +133,43 @@ void Node::attachChildNodes()
 
 }
 
+std::vector<Point2D> subDivide(Point2D _upLeft, Point2D _boRight,double &sideLength) {
+	
+	double sideLength = (_boRight.x - _upLeft.x)/2;
+	
+	Point2D nwMP = Point2D(_upLeft.x + sideLength/2.0, upLeft.y + sideLength/2.0);
+	Point2D swMP = Point2D(_upeft.x + sideLength/2.0, upLeft.y + sideLength);
+	Point2D neMP = Point2D(_upLeft.x + sideLength, upLeft.y + sideLength/2.0);
+	Point2D seMP = Point2D(_upLeft.x + sideLength, upLeft.y + sideLength);
+	
+	std::vector<Point2D> returnVec;
+	returnVec.resize(4);
+	returnVec[0] = nwMP;
+	returnVec[1] = swMP;
+	returnVec[2] = neMP;
+	returnVec[3] = seMP;
+	
+	return returnVec;
+}
+
+std::vector<Point2D> calculateBounding(Point2d _midpoint, double sideLength) {
+	
+	Point2D upLeft;
+	Point2D boRight;
+	
+	upLeft.x = _midpoint.x - sideLength/2.0;
+	upLeft.y = _midpoint.y - sideLength/2.0;
+	boRight.x = _midpoint.x + sideLength/2.0;
+	boRight.y = _midpoint.y + sideLength/2.0;
+	
+	std::vector<Point2D> returnVec;
+	returnVec.pushback(upLeft);
+	returnVec.pushback(boRight);
+}
+
+
 std::shared_ptr<Node> Node::getChildNode()
 {
-
-
 
 	return std::shared_ptr<Node>();
 }
