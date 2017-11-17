@@ -11,17 +11,22 @@ integrator::~integrator() {
 
 
 //the following within comments is scratch:
-std::vector<Particle> eff_system; //contains information of everybody EXECPT the one whose dynamics are being calculated
+std::vector<Particle> other_particles; //contains information of everybody EXECPT the one whose dynamics are being calculated
 std::vector<Particle> self_particle; //
 //end of scratch
 
-double  integrator::fg_rk45(int body_count, std::vector<Particle> eff_system, std::vector<Particle>, double tol, bool error) //intended output is a double array with velocity and position
+double  integrator::fg_rk45(std::vector<Particle> other_particles, std::vector<Particle> self_particle, double DT, double tol, bool error) //intended output is a double array with velocity and position
 {
-	double dist_mag_sq, a_mag, dt, cT, TT, v_mag4, v_mag5, r_mag4, r_mag5, dV45, dR45;
 	const double g = 6.67408 * pow(10, -11); //gravitational constant G in m^3/(kg s^2)
-	double a[3], vold[3], v5[3], v4[3], rold[3], r5[3], r4[3], vkk[3], rkk[3];
+	const int body_count = other_masses.size(); //calculates the effective number of bodies in system (not including self)
+	double dist_mag_sq, a_mag, dt, cT, DT, v_mag4, v_mag5, r_mag4, r_mag5, dV45, dR45;
+	double a[3], vold[3], v5[3], v4[3], rold[3], r5[3], r4[3];
+	double vkk[3], rkk[3];
 	double vk_matrix[3][6] = {};
 	double rk_matrix[3][6] = {};
+
+	std::vector< vector<double> >  mass_dist(body_count, vector<int>(3));//establishes an N by 3 vector 
+
 	const double k_ratio[6][6] =
 	{
 		{},
@@ -33,10 +38,10 @@ double  integrator::fg_rk45(int body_count, std::vector<Particle> eff_system, st
 	};
 
 	cT = 0; //current time
-	TT = 200; //total time in seconds
-	dt = 0.01;//time step (will vary)
+	DT = 1; //total time in seconds
+	dt = 0.1;//time step (will vary)
 
-			  //loop sets "old" position and velocity values
+	 //loop sets "old" position and velocity values
 	for (int i = 0; i < 3; i++) {
 		rold[i] = r[i];
 		vold[i] = v[i];
@@ -64,6 +69,7 @@ double  integrator::fg_rk45(int body_count, std::vector<Particle> eff_system, st
 			//loops over number of other bodies; calculates acceleration
 			for (int iter = 0; iter < body_count; iter++) {
 				dist_mag_sq = pow(mass_dist[iter][0] + vkk[0], 2) + pow(mass_dist[iter][1] + vkk[1], 2) + pow(mass_dist[iter][2] + vkk[2], 2); //magnitude of r squared
+
 				a_mag = g*other_masses[iter] / dist_mag_sq; //magnitude of force/mass on current body due to the ith other body
 				for (int i = 0; i < 3; i++) {//loops over x,y,z coordinates
 					a[i] = a[i] + a_mag*(mass_dist[iter][i] + vkk[i]) / sqrt(dist_mag_sq); // force/mass and direction calculation
@@ -110,7 +116,7 @@ double  integrator::fg_rk45(int body_count, std::vector<Particle> eff_system, st
 		}
 
 
-	} while (cT < TT);
+	} while (cT < DT);
 
 	return 0;
 }
