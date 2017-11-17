@@ -5,18 +5,22 @@
 #include <memory>
 
 
+
 int main() {
+
 
 	const double MAX_GRID_X = 10;
 	const double MAX_GRID_Y = 10;
 	const double MIN_GRID_X = 0;
 	const double MIN_GRID_Y = 0;
 
+	std::ofstream pointFile;
+	pointFile.open("PointData.txt");
 
 	std::random_device r;
 	std::default_random_engine engine(r());
 	//Works fine for a square grid, if grid is rectangular need to create a new distribution
-	std::uniform_real_distribution<double> dist(MIN_GRID_X, MAX_GRID_X);
+	std::uniform_real_distribution<double> dist(5, 10);
 	std::mt19937_64 e2;
 	//Setup initial quad tree.
 	QuadTree center(Point2D(0, 0), Point2D(0, 0));
@@ -32,7 +36,7 @@ int main() {
 		myParticles[i].pos.x = dist(engine);
 		myParticles[i].pos.y = dist(engine);
 
-		std::cout << myParticles[i].pos.x << "," << myParticles[i].pos.y << std::endl;
+		pointFile << myParticles[i].pos.x << "," << myParticles[i].pos.y << std::endl;
 	}
 
 

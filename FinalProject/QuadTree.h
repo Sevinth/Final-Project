@@ -9,13 +9,12 @@ public:
 	QuadTree(Point2D, Point2D);
 	~QuadTree();
 
-
 	//Define Bounding box by upper left and lower right points
 	Point2D topLeft;
 	Point2D botRight;
 
 	std::shared_ptr<Node> TreeSearch();
-
+	std::vector<std::shared_ptr<Node>> findNodesWParticles(std::shared_ptr<Node> node);
 	std::shared_ptr<Node> rootNode;
 
 };

@@ -3,10 +3,39 @@
 
 Node::Node(Point2D _midPoint, double _sideLength, std::vector<Particle> particleList, int _rank) {
 
+	std::ofstream outFile;
+	outFile.open("Data.txt", std::ios::app);
+
+	Point2D nwVert;
+	Point2D swVert;
+	Point2D neVert;
+	Point2D seVert;
+
 	std::vector<Point2D> bounds = calculateBounding(_midPoint, _sideLength);
 	this->upLeft = bounds[0];
 	this->boRight = bounds[1];
 	this->sideLenth = _sideLength;
+	this->rank = _rank;
+
+	nwVert = upLeft;
+	seVert = boRight;
+	neVert.x = boRight.x;
+	neVert.y = upLeft.y;
+	swVert.x = upLeft.x;
+	swVert.y = boRight.y;
+
+	outFile << nwVert.x << " " << nwVert.y << " " << swVert.x << " " << swVert.y << " " << neVert.x << " " << neVert.y << " " << seVert.x << " " << seVert.y << " " << _midPoint.x << " " << _midPoint.y << std::endl;
+	outFile.close();
+	std::cout << "Rank: " << rank << ",";
+	std::cout << _midPoint.x << " " << _midPoint.y << std::endl;
+
+	for (size_t i = 0; i < particleList.size(); ++i) {
+		if (particleList[i].pos.x > upLeft.x && particleList[i].pos.y > upLeft.y &&
+			particleList[i].pos.x < boRight.x && particleList[i].pos.y < boRight.y)
+		{
+			this->localParticles.push_back(particleList[i]);
+		}
+	}
 
 	if (particleList.size() > 1) {
 		std::vector<Point2D> newMidPoints;
@@ -86,12 +115,11 @@ Node::Node(Point2D _upLeft, Point2D _boRight, std::vector<Particle> particleList
 		std::vector<Point2D> newMidPoints;
 		newMidPoints.resize(4);
 		newMidPoints = subDivide(this->upLeft, this->boRight, sideLength);
-
+		std::cout << "Side: " << sideLength << std::endl;
 		Node nwNode(newMidPoints[0], sideLength, localParticles, this->rank + 1);
 		Node swNode(newMidPoints[1], sideLength, localParticles, this->rank + 1);
 		Node neNode(newMidPoints[2], sideLength, localParticles, this->rank + 1);
 		Node seNode(newMidPoints[3], sideLength, localParticles, this->rank + 1);
-
 
 		//Add nodes to the child node vector
 		childNodes.push_back(std::make_shared<Node>(neNode));
@@ -145,9 +173,9 @@ std::vector<Point2D> Node::subDivide(Point2D _upLeft, Point2D _boRight, double &
 	sideLength = (_boRight.x - _upLeft.x) / 2;
 
 	Point2D nwMP = Point2D(_upLeft.x + sideLength / 2.0, _upLeft.y + sideLength / 2.0);
-	Point2D swMP = Point2D(_upLeft.x + sideLength / 2.0, _upLeft.y + sideLength);
-	Point2D neMP = Point2D(_upLeft.x + sideLength, _upLeft.y + sideLength / 2.0);
-	Point2D seMP = Point2D(_upLeft.x + sideLength, _upLeft.y + sideLength);
+	Point2D swMP = Point2D(nwMP.x, nwMP.y + sideLength);
+	Point2D neMP = Point2D(nwMP.x + sideLength, nwMP.y);
+	Point2D seMP = Point2D(nwMP.x + sideLength,  nwMP.y + sideLength);
 
 	std::vector<Point2D> returnVec;
 	returnVec.resize(4);

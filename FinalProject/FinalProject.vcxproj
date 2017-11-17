@@ -92,12 +92,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(I_MPI_ROOT)\intel64\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\External Libraries\SDL2-2.0.7\include;$(I_MPI_ROOT)\intel64\include</AdditionalIncludeDirectories>
       <OpenMP>GenerateParallelCode</OpenMP>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(I_MPI_ROOT)\intel64\lib\debug_mt</AdditionalLibraryDirectories>
-      <AdditionalDependencies>impi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\External Libraries\SDL2-2.0.7\lib\x64;$(I_MPI_ROOT)\intel64\lib\debug_mt</AdditionalLibraryDirectories>
+      <AdditionalDependencies>impi.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>-g %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
