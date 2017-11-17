@@ -10,7 +10,7 @@ public:
 	integrator(double tol);
 	~integrator();
 
-	double fg_rk45(int body_count, double other_masses[], double mass_dist[][3], double self_mass, double r[], double v[], double tol, bool error);
+	Particle fg_rk45(std::vector<Particle> other_particles, Particle self_particle, double DT, double tol, bool error);
 	
 
 private:

@@ -10,23 +10,16 @@ integrator::~integrator() {
 }
 
 
-//the following within comments is scratch:
-std::vector<Particle> other_particles; //contains information of everybody EXECPT the one whose dynamics are being calculated
-std::vector<Particle> self_particle; //
-//end of scratch
-
-double  integrator::fg_rk45(std::vector<Particle> other_particles, std::vector<Particle> self_particle, double DT, double tol, bool error) //intended output is a double array with velocity and position
+//definition changed to "particle." IS THIS OK?
+Particle  integrator::fg_rk45(std::vector<Particle> other_particles, Particle self_particle, double DT, double tol, bool error) //intended output is a double array with velocity and position
 {
 	const double g = 6.67408 * pow(10, -11); //gravitational constant G in m^3/(kg s^2)
-	const int body_count = other_masses.size(); //calculates the effective number of bodies in system (not including self)
+	const int body_count = other_particles.size(); //calculates the effective number of bodies in system (not including self)
 	double dist_mag_sq, a_mag, dt, cT, DT, v_mag4, v_mag5, r_mag4, r_mag5, dV45, dR45;
 	double a[3], vold[3], v5[3], v4[3], rold[3], r5[3], r4[3];
 	double vkk[3], rkk[3];
 	double vk_matrix[3][6] = {};
 	double rk_matrix[3][6] = {};
-
-	std::vector< vector<double> >  mass_dist(body_count, vector<int>(3));//establishes an N by 3 vector 
-
 	const double k_ratio[6][6] =
 	{
 		{},
@@ -38,14 +31,13 @@ double  integrator::fg_rk45(std::vector<Particle> other_particles, std::vector<P
 	};
 
 	cT = 0; //current time
-	DT = 1; //total time in seconds
-	dt = 0.1;//time step (will vary)
+	dt = DT/10;//time step (will vary)
 
-	 //loop sets "old" position and velocity values
-	for (int i = 0; i < 3; i++) {
-		rold[i] = r[i];
-		vold[i] = v[i];
-	}
+	rold[0] = self_particle.pos.x;
+	rold[1] = self_particle.pos.y;
+	vold[0] = self_particle.vel.vx;
+	vold[1] = self_particle.vel.vy;
+		
 
 	//loops from t=0 to t=TT;
 	do {
@@ -68,18 +60,20 @@ double  integrator::fg_rk45(std::vector<Particle> other_particles, std::vector<P
 
 			//loops over number of other bodies; calculates acceleration
 			for (int iter = 0; iter < body_count; iter++) {
-				dist_mag_sq = pow(mass_dist[iter][0] + vkk[0], 2) + pow(mass_dist[iter][1] + vkk[1], 2) + pow(mass_dist[iter][2] + vkk[2], 2); //magnitude of r squared
+				dist_mag_sq = pow(other_particles.at(iter).pos.x + vkk[0], 2) + pow(other_particles.at(iter).pos.y + vkk[1], 2); //magnitude of r squared
+//mass_dist is an N by 2 array with the x,y displacement from self_particle to another particle. replace with "other_particles.pos.x and other....pos.y" 
+				a_mag = g*other_particles.at(iter).mass / dist_mag_sq; //magnitude of force/mass on current body due to the ith other body
+//LOOK AT OTHER_PARTICLES.AT(ITER). IS THERE A BETTER WAY TO MAKE THESE CALLS? CAN I LEAVE THE OTHER VECTORS AS ARRAYS?
+				a[0] = a[0] + a_mag*(other_particles.at(iter).pos.x + vkk[0]) / sqrt(dist_mag_sq); // force/mass and direction calculation
+				a[1] = a[1] + a_mag*(other_particles.at(iter).pos.y + vkk[1]) / sqrt(dist_mag_sq); // force/mass and direction calculation
 
-				a_mag = g*other_masses[iter] / dist_mag_sq; //magnitude of force/mass on current body due to the ith other body
-				for (int i = 0; i < 3; i++) {//loops over x,y,z coordinates
-					a[i] = a[i] + a_mag*(mass_dist[iter][i] + vkk[i]) / sqrt(dist_mag_sq); // force/mass and direction calculation
-				}
+			
 			}
 
 			//calculates new k values. loops over x,y,z coordinates
 			for (int i = 0; i < 3; i++) {
 				vk_matrix[i][kn] = dt*a[i];
-				rk_matrix[i][kn] = dt*(v[i] + rkk[i]);
+				rk_matrix[i][kn] = dt*(vold[i] + rkk[i]);
 			}
 		}
 		//end main integrator    =============================
@@ -105,6 +99,7 @@ double  integrator::fg_rk45(std::vector<Particle> other_particles, std::vector<P
 		{
 			cT = cT + dt;
 			dt = dt*0.84*pow(tol / dR45, 0.25);
+			if (DT - cT < dt) dt = DT - cT; // if the new step size is larger than the remaining alloted time, then the step sized is decreased to the remaining alloted time
 			for (int i = 0; i < 3; i++) {
 				vold[i] = v5[i];
 				rold[i] = r5[i];
@@ -117,7 +112,13 @@ double  integrator::fg_rk45(std::vector<Particle> other_particles, std::vector<P
 
 
 	} while (cT < DT);
+	
+	//IS THERE ANY WAY TO SHORTEN THIS? 
+	self_particle.pos.x = rold[0];
+	self_particle.pos.y = rold[1];
+	self_particle.vel.vx = vold[0];
+	self_particle.vel.vy = vold[0];
 
-	return 0;
+	return self_particle;
 }
 
