@@ -21,11 +21,13 @@
   <ItemGroup>
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="QuadTree.cpp" />
+    <ClCompile Include="rk45.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Node.h" />
     <ClInclude Include="QuadTree.h" />
+    <ClInclude Include="rk45.h" />
     <ClInclude Include="std.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -97,7 +99,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(ProjectDir)\External Libraries\SDL2-2.0.7\lib\x64;$(I_MPI_ROOT)\intel64\lib\debug_mt</AdditionalLibraryDirectories>
-      <AdditionalDependencies>impi.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>impi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>-g %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>

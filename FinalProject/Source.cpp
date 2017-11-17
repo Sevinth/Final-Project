@@ -3,7 +3,7 @@
 #include <random>
 #include <vector>
 #include <memory>
-
+#include "rk45.h"
 
 
 int main() {
@@ -58,6 +58,11 @@ int main() {
 #ifdef _WIN32
 	system("PAUSE");
 #endif
+
+
+
+	integrator myIntegrator(0.1);
+
 
 	return EXIT_SUCCESS;
 }
