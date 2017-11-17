@@ -23,8 +23,25 @@ struct Point2D {
 };
 
 
+struct Velocity2D {
+	double vx;
+	double vy;
+
+	Velocity2D(double _vx, double _vy) {
+		vx = _vx;
+		vy = _vy;
+	}
+	Velocity2D() {
+		vx = 0;
+		vy = 0;
+	}
+
+};
+
+
 struct Particle {
 	Point2D pos;
+	Velocity2D vel;
 	double mass;
 	Particle(Point2D _pos, double _mass) {
 		pos = _pos;
@@ -32,6 +49,7 @@ struct Particle {
 	}
 	Particle() {
 		pos = Point2D(0, 0);
+		vel = Velocity2D(0,0)
 		mass = 1.0;
 	}
 };

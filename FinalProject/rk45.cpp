@@ -10,7 +10,12 @@ integrator::~integrator() {
 }
 
 
-double  integrator::fg_rk45(int body_count, double other_masses[], double mass_dist[][3], double self_mass, double r[], double v[], double tol, bool error) //intended output is a double array with velocity and position
+//the following within comments is scratch:
+std::vector<Particle> eff_system; //contains information of everybody EXECPT the one whose dynamics are being calculated
+std::vector<Particle> self_particle; //
+//end of scratch
+
+double  integrator::fg_rk45(int body_count, std::vector<Particle> eff_system, std::vector<Particle>, double tol, bool error) //intended output is a double array with velocity and position
 {
 	double dist_mag_sq, a_mag, dt, cT, TT, v_mag4, v_mag5, r_mag4, r_mag5, dV45, dR45;
 	const double g = 6.67408 * pow(10, -11); //gravitational constant G in m^3/(kg s^2)
