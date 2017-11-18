@@ -43,7 +43,7 @@ struct Particle {
 	Point2D pos;
 	Velocity2D vel;
 	double mass;
-	Particle(Point2D _pos, double vel, double _mass) {
+	Particle(Point2D _pos, Velocity2D _vel, double _mass) {
 		pos = _pos;
 		vel = _vel;
 		mass = _mass;
