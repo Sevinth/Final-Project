@@ -15,7 +15,7 @@ Particle  integrator::fg_rk45(std::vector<Particle> other_particles, Particle se
 {
 	const double g = 6.67408 * pow(10, -11); //gravitational constant G in m^3/(kg s^2)
 	const int body_count = other_particles.size(); //calculates the effective number of bodies in system (not including self)
-	double dist_mag_sq, a_mag, dt, cT, DT, v_mag4, v_mag5, r_mag4, r_mag5, dV45, dR45;
+	double dist_mag_sq, a_mag, dt, cT, v_mag4, v_mag5, r_mag4, r_mag5, dV45, dR45;
 	double a[3], vold[3], v5[3], v4[3], rold[3], r5[3], r4[3];
 	double vkk[3], rkk[3];
 	double vk_matrix[3][6] = {};
@@ -79,7 +79,7 @@ Particle  integrator::fg_rk45(std::vector<Particle> other_particles, Particle se
 		//end main integrator    =============================
 
 		//udates velocity and position		
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 2; i++) {
 			v5[i] = vold[i] + (16 / 135)*vk_matrix[i][1] + (6656 / 12825)*vk_matrix[i][3] + (28561 / 56430)*vk_matrix[i][4] - (9 / 50)*vk_matrix[i][5] + (2 / 55)*vk_matrix[i][6];
 			v4[i] = vold[i] + (25 / 216)*vk_matrix[i][1] + (1408 / 2565)*vk_matrix[i][3] + (2197 / 4101)*vk_matrix[i][4] - (1 / 5)*vk_matrix[i][5];
 			r5[i] = rold[i] + (16 / 135)*rk_matrix[i][1] + (6656 / 12825)*rk_matrix[i][3] + (28561 / 56430)*rk_matrix[i][4] - (9 / 50)*rk_matrix[i][5] + (2 / 55)*rk_matrix[i][6];
@@ -100,7 +100,7 @@ Particle  integrator::fg_rk45(std::vector<Particle> other_particles, Particle se
 			cT = cT + dt;
 			dt = dt*0.84*pow(tol / dR45, 0.25);
 			if (DT - cT < dt) dt = DT - cT; // if the new step size is larger than the remaining alloted time, then the step sized is decreased to the remaining alloted time
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 2; i++) {
 				vold[i] = v5[i];
 				rold[i] = r5[i];
 			}
