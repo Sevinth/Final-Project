@@ -1,19 +1,20 @@
 #pragma once
 #include "std.h"
+#include <map>
 
 class Node
 {
 public:
-	Node(Point2D, double, std::vector<Particle>, int);
-	Node(Point2D, Point2D, std::vector<Particle>, int _rank = 0);
-	Node(Point2D, Point2D);
+	Node();
 	~Node();
 	
 	void attachChildNodes();
 	std::shared_ptr<Node> getChildNode();
 	Point2D calculateCOM(std::vector<Particle>, Point2D&);
 	std::vector<Point2D> subDivide(Point2D, Point2D, double&);
-	std::vector<Point2D> Node::calculateBounding(Point2D, double);
+	std::vector<Point2D> calculateBounding(Point2D, double);
+
+
 	Point2D upLeft;
 	Point2D boRight;
 
@@ -26,7 +27,10 @@ public:
 	bool hasChildren{ false };
 	bool hasParticle{ false };
 	Point2D centMass{0.0,0.0};
-	std::vector<std::shared_ptr<Node>> childNodes;
+	std::vector<std::shared_ptr<Node>> LocalChildren;
+	std::shared_ptr<Node> GlobalParent{nullptr};
+	std::shared_ptr<Node> LocalParent{ nullptr };
+	std::vector<std::shared_ptr<Node>> GlobalChildren;
 	std::vector<Particle> localParticles;
 };
 
