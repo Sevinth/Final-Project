@@ -9,6 +9,9 @@
 int main() {
 
 
+//BEGIN QUADTREE CLASS TEST -----------------------------------------------------------------------
+	
+
 	const double MAX_GRID_X = 10;
 	const double MAX_GRID_Y = 10;
 	const double MIN_GRID_X = 0;
@@ -54,8 +57,10 @@ int main() {
 		}
 	}
 
+	std::cout << "Number of nodes that have particles: " << nPoints << std::endl;
 
-	std::cout << "Number of children, maybe: " << nPoints << std::endl;
+//END QUADTREE CLASS TEST-------------------------------------------------------------------------------
+
 
 #ifdef _WIN32
 	system("PAUSE");

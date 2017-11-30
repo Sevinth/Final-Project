@@ -31,6 +31,7 @@ public:
 	std::shared_ptr<Node> GlobalParent{nullptr};
 	std::shared_ptr<Node> LocalParent{ nullptr };
 	std::vector<std::shared_ptr<Node>> GlobalChildren;
+	std::vector<int> GlobalChildrenRank;
 	std::vector<Particle> localParticles;
 };
 
