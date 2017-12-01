@@ -18,7 +18,11 @@ public:
 	std::shared_ptr<Node> rootNode;
 	void BuildTree(Point2D _midPoint, double _sideLength, std::vector<Particle> particleList, int _rank, std::shared_ptr<Node> _GlobalParent, std::shared_ptr<Node> tNode);
 	void MakeRootNode(Point2D _boRight, Point2D _upLeft, int _rank, std::shared_ptr<Node> root, std::vector<Particle> particleList);
+	void UpdateTreeStructure(std::shared_ptr<Node>);
+	void NodeListManager();
 
+	std::vector<std::shared_ptr<Node>> AllNodes;
+	std::vector<int> AllNodeRanks;
 
 };
 

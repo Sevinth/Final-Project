@@ -43,6 +43,7 @@ std::vector<Point2D> Node::calculateBounding(Point2D _midpoint, double sideLengt
 
 	Point2D upLeft;
 	Point2D boRight;
+	this->midPoint = _midpoint;
 
 	upLeft.x = _midpoint.x - sideLength / 2.0;
 	upLeft.y = _midpoint.y - sideLength / 2.0;

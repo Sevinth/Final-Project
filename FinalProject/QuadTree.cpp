@@ -19,6 +19,7 @@ QuadTree::~QuadTree()
 {
 
 
+
 }
 
 
@@ -46,8 +47,7 @@ void QuadTree::BuildTree(Point2D _midPoint, double _sideLength, std::vector<Part
 
 	std::ofstream outFile;
 	outFile.open("Data.txt", std::ios::app);
-
-
+	
 	Point2D nwVert;
 	Point2D swVert;
 	Point2D neVert;
@@ -216,4 +216,32 @@ void QuadTree::MakeRootNode(Point2D _boRight, Point2D _upLeft, int _rank, std::s
 			root->hasChildren = false;
 		}
 	}
+}
+
+
+void QuadTree::UpdateTreeStructure(std::shared_ptr<Node> node) {
+
+	
+	for (int i = 0; i < rootNode->GlobalChildren.size(); i++) {
+		
+		if (rootNode->GlobalChildren[i] == node->LocalChildren[i]) {
+			rootNode->GlobalChildren[i].reset;
+			node->LocalChildren[i].reset;
+			node->LocalChildren.erase[i];
+			rootNode->GlobalChildren.erase[i];
+		}
+
+
+	}
+
+	//TODO: NEED TO BUILD TREE FROM THIS NODE DOWN
+	
+}
+
+
+void QuadTree::NodeListManager() {
+
+
+
+
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "std.h"
-#include <map>
+
 
 class Node
 {
@@ -14,15 +14,15 @@ public:
 	std::vector<Point2D> subDivide(Point2D, Point2D, double&);
 	std::vector<Point2D> calculateBounding(Point2D, double);
 
-
 	Point2D upLeft;
 	Point2D boRight;
+	Point2D midPoint;
 
 	double width;
 	double height;
 	double area;
 	double sideLenth;
-
+	
 	int rank{ 0 };
 	bool hasChildren{ false };
 	bool hasParticle{ false };
@@ -31,6 +31,7 @@ public:
 	std::shared_ptr<Node> GlobalParent{nullptr};
 	std::shared_ptr<Node> LocalParent{ nullptr };
 	std::vector<std::shared_ptr<Node>> GlobalChildren;
+	std::vector<int> GlobalChildrenRank;
 	std::vector<Particle> localParticles;
 };
 
