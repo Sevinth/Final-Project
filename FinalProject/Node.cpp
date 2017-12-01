@@ -10,6 +10,12 @@ Node::Node() {
 Node::~Node()
 {
 
+	this->AllChildren.clear();
+	for (int i = 0; i < this->LocalChildren.size(); i++) {
+		this->LocalChildren[i].reset();
+	}
+	this->LocalChildren.clear();
+	this->localParticles.clear();
 
 }
 

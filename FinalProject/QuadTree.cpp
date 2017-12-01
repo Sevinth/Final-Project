@@ -17,7 +17,7 @@ QuadTree::QuadTree(Point2D tl, Point2D br) {
 
 QuadTree::~QuadTree()
 {
-
+	
 
 }
 
@@ -31,7 +31,7 @@ std::shared_ptr<Node> QuadTree::TreeSearch() {
 
 std::vector<std::shared_ptr<Node>> QuadTree::findNodesWParticles(std::shared_ptr<Node> node) {
 
-	std::vector<std::shared_ptr<Node>> returnVetor;
+	std::vector<std::shared_ptr<Node>> returnVector;
 
 	int totalParticleNumber = node->localParticles.size();
 	
@@ -39,10 +39,11 @@ std::vector<std::shared_ptr<Node>> QuadTree::findNodesWParticles(std::shared_ptr
 	
 	std::shared_ptr<Node> tempRoot;
 
+	return returnVector;
 }
 
 
-void QuadTree::BuildTree(Point2D _midPoint, double _sideLength, std::vector<Particle> particleList, int _rank, std::shared_ptr<Node> _GlobalParent, std::shared_ptr<Node> thisNode) {
+void QuadTree::BuildTree(Point2D _midPoint, double _sideLength, std::vector<Particle> particleList, int _rank, std::shared_ptr<Node> _GlobalParent, std::shared_ptr<Node> thisNode, std::shared_ptr<Node> locParent) {
 
 	std::ofstream outFile;
 	outFile.open("Data.txt", std::ios::app);
@@ -91,7 +92,7 @@ void QuadTree::BuildTree(Point2D _midPoint, double _sideLength, std::vector<Part
 		std::shared_ptr<Node> neNode = std::make_shared<Node>();
 		std::shared_ptr<Node> seNode = std::make_shared<Node>();
 
-		QuadTreeSubDivide(thisNode, nwNode, swNode, neNode, seNode, sideLength);
+		QuadTreeSubDivide(thisNode, nwNode, swNode, neNode, seNode, sideLength,locParent);
 
 		//Add nodes to the child node vector
 		thisNode->LocalChildren.push_back(neNode);
@@ -104,6 +105,8 @@ void QuadTree::BuildTree(Point2D _midPoint, double _sideLength, std::vector<Part
 		for (int i = 0; i <thisNode-> LocalChildren.size(); i++) {
 			thisNode->GlobalParent->GlobalChildren.push_back(thisNode->LocalChildren[i]);
 			thisNode->GlobalParent->GlobalChildrenRank.push_back(thisNode->rank + 1);
+			thisNode->GlobalChildren.push_back(thisNode->LocalChildren[i]);
+
 		}
 
 		thisNode->hasChildren = true;
@@ -169,7 +172,7 @@ void QuadTree::MakeRootNode(Point2D _boRight, Point2D _upLeft, int _rank, std::s
 		std::shared_ptr<Node> neNode = std::make_shared<Node>();
 		std::shared_ptr<Node> seNode = std::make_shared<Node>();
 
-		QuadTreeSubDivide(root, nwNode, swNode, neNode, seNode, sideLength);
+		QuadTreeSubDivide(root, nwNode, swNode, neNode, seNode, sideLength, root);
 
 		//Add nodes to the child node vector
 		root->LocalChildren.push_back(neNode);
@@ -179,8 +182,10 @@ void QuadTree::MakeRootNode(Point2D _boRight, Point2D _upLeft, int _rank, std::s
 
 
 		for (int i = 0; i < root->LocalChildren.size(); i++) {
+
 			root->GlobalChildren.push_back(root->LocalChildren[i]);
 			root->GlobalChildrenRank.push_back(root->rank + 1);
+			
 		}
 
 
@@ -236,28 +241,47 @@ void QuadTree::passToAdjacent(Particle p, std::shared_ptr<Node> nodeParent, std:
 }
 
 void QuadTree:: RemoveChildren(std::shared_ptr<Node> node) {
-
 	
-	//Removes this objects reference to the unique_ptr
-	//Still need to figure out how to remove it from the global list
 	for (int i = 0; i < node->LocalChildren.size(); i++) {
-		node->LocalChildren[i].reset;
+		node->LocalChildren[i].reset();
 	}
-
-	node->LocalChildren.clear();
 	
+	node->LocalChildren.clear();
+
 }
 
 void QuadTree::QuadTreeSubDivide(std::shared_ptr<Node> node,
 	std::shared_ptr<Node> nwNode, std::shared_ptr<Node> swNode, 
-	std::shared_ptr<Node> neNode, std::shared_ptr<Node> seNode, double& sideLength) {
+	std::shared_ptr<Node> neNode, std::shared_ptr<Node> seNode, double& sideLength,std::shared_ptr<Node> locParent) {
 	std::vector<Point2D> newMidPoints;
+
 	newMidPoints.resize(4);
 	newMidPoints = node->subDivide(node->upLeft, node->boRight, sideLength);
 
-	BuildTree(newMidPoints[0], sideLength, node->localParticles,node->rank + 1, node, nwNode);
-	BuildTree(newMidPoints[1], sideLength, node->localParticles, node->rank + 1, node, swNode);
-	BuildTree(newMidPoints[2], sideLength, node->localParticles, node->rank + 1, node, neNode);
-	BuildTree(newMidPoints[3], sideLength, node->localParticles, node->rank + 1, node, seNode);
+	BuildTree(newMidPoints[0], sideLength, node->localParticles,node->rank + 1, node, nwNode, locParent);
+	BuildTree(newMidPoints[1], sideLength, node->localParticles, node->rank + 1, node, swNode, locParent);
+	BuildTree(newMidPoints[2], sideLength, node->localParticles, node->rank + 1, node, neNode, locParent);
+	BuildTree(newMidPoints[3], sideLength, node->localParticles, node->rank + 1, node, seNode, locParent);
+
+}
+
+
+
+void QuadTree::UpdateTreeStructure(std::shared_ptr<Node> node) {
+
+
+	std::shared_ptr<Node> nwNode = std::make_shared<Node>();
+	std::shared_ptr<Node> swNode = std::make_shared<Node>();
+	std::shared_ptr<Node> neNode = std::make_shared<Node>();
+	std::shared_ptr<Node> seNode = std::make_shared<Node>();
+	
+	
+	std::vector<Point2D> newMidPoints;
+	newMidPoints.resize(4);
+	double sideLength = 0;
+
+	newMidPoints = node->subDivide(node->upLeft, node->boRight, sideLength);
+
+	QuadTreeSubDivide(node, nwNode, swNode, neNode, seNode, sideLength, node);
 
 }

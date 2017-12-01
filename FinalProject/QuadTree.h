@@ -21,11 +21,12 @@ public:
 
 	void passToAdjacent(Particle, std::shared_ptr<Node>, std::shared_ptr<Node>);
 	void RemoveChildren(std::shared_ptr<Node>);
-	void BuildTree(Point2D _midPoint, double _sideLength, std::vector<Particle> particleList, int _rank, std::shared_ptr<Node> _GlobalParent, std::shared_ptr<Node> tNode);
+	void BuildTree(Point2D _midPoint, double _sideLength, std::vector<Particle> particleList, int _rank, std::shared_ptr<Node> _GlobalParent, std::shared_ptr<Node> tNode, std::shared_ptr<Node> locParent);
 	void MakeRootNode(Point2D _boRight, Point2D _upLeft, int _rank, std::shared_ptr<Node> root, std::vector<Particle> particleList);
 	void QuadTreeSubDivide(std::shared_ptr<Node> node,
 		std::shared_ptr<Node> nwNode, std::shared_ptr<Node> swNode,
-		std::shared_ptr<Node> neNode, std::shared_ptr<Node> seNode, double&);
+		std::shared_ptr<Node> neNode, std::shared_ptr<Node> seNode, double&, std::shared_ptr<Node> locParent);
+	void UpdateTreeStructure(std::shared_ptr<Node> node);
 
 };
 

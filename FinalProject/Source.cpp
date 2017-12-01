@@ -57,10 +57,16 @@ int main() {
 		}
 	}
 
-	std::cout << "Number of nodes that have particles: " << nPoints << std::endl;
+	for (int i = 0; i < myTree.rootNode->GlobalChildren.size(); i++) {
+		if (myTree.rootNode->GlobalChildren[i]->hasChildren = true) {
+			myTree.RemoveChildren(myTree.rootNode->GlobalChildren[i]);
+			myTree.UpdateTreeStructure(myTree.rootNode->GlobalChildren[i]);
+		}
+	}
+
+	
 
 //END QUADTREE CLASS TEST-------------------------------------------------------------------------------
-
 
 #ifdef _WIN32
 	system("PAUSE");
