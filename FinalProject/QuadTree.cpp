@@ -29,17 +29,6 @@ std::shared_ptr<Node> QuadTree::TreeSearch() {
 	
 }
 
-std::vector<std::shared_ptr<Node>> QuadTree::findNodesWParticles(std::shared_ptr<Node> node) {
-
-	std::vector<std::shared_ptr<Node>> returnVetor;
-
-	int totalParticleNumber = node->localParticles.size();
-	
-	int particleCount = 0;
-	
-	std::shared_ptr<Node> tempRoot;
-
-}
 
 
 void QuadTree::BuildTree(Point2D _midPoint, double _sideLength, std::vector<Particle> particleList, int _rank, std::shared_ptr<Node> _GlobalParent, std::shared_ptr<Node> thisNode) {
