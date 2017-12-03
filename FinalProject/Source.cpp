@@ -6,8 +6,13 @@
 #include "rk45.h"
 
 
-int main() {
+double getDistance(Point2D x, Point2D y) {
 
+	return std::sqrt(std::pow(y.x - x.x, 2) + std::pow(y.y - x.y, 2));	
+
+}
+
+int main() {
 
 //BEGIN QUADTREE CLASS TEST -----------------------------------------------------------------------
 	
@@ -57,14 +62,17 @@ int main() {
 		}
 	}
 
-	for (int i = 0; i < myTree.rootNode->GlobalChildren.size(); i++) {
-		if (myTree.rootNode->GlobalChildren[i]->hasChildren = true) {
-			myTree.RemoveChildren(myTree.rootNode->GlobalChildren[i]);
-			myTree.UpdateTreeStructure(myTree.rootNode->GlobalChildren[i]);
-		}
-	}
-
 	
+	std::cout << "Number of nodes with one particle: " << myTree.NodesContainingParticles.size() << std::endl;
+	std::cout << "Number of particles: " << myParticles.size() << std::endl;
+
+	const double r_max = 3.0;
+	int nCounter = 0;
+	Particle testPart;
+	testPart = myParticles[0];
+	
+	myTree.QuadTreeIterate(myTree.rootNode, testPart);
+
 
 //END QUADTREE CLASS TEST-------------------------------------------------------------------------------
 

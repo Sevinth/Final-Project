@@ -20,6 +20,20 @@ struct Point2D {
 		y = 0;
 	}
 
+	bool operator==(Point2D v) {
+		if (v.x == this->x && v.y == this->y)
+			return true;
+		else
+			return false;
+	}
+
+	bool operator!=(Point2D v) {
+		if (v.y != this->x && v.y != this -> y)
+			return true;
+		else
+			return false;
+	}
+
 };
 
 

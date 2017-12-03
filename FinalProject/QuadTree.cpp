@@ -119,6 +119,7 @@ void QuadTree::BuildTree(Point2D _midPoint, double _sideLength, std::vector<Part
 		}
 		if (massTotals > 0) {
 			thisNode->hasParticle = true;
+			this->NodesContainingParticles.push_back(thisNode);
 			thisNode->calculateCOM(particleList, thisNode->centMass);
 		}
 		else
@@ -250,6 +251,7 @@ void QuadTree:: RemoveChildren(std::shared_ptr<Node> node) {
 
 }
 
+
 void QuadTree::QuadTreeSubDivide(std::shared_ptr<Node> node,
 	std::shared_ptr<Node> nwNode, std::shared_ptr<Node> swNode, 
 	std::shared_ptr<Node> neNode, std::shared_ptr<Node> seNode, double& sideLength,std::shared_ptr<Node> locParent) {
@@ -266,7 +268,7 @@ void QuadTree::QuadTreeSubDivide(std::shared_ptr<Node> node,
 }
 
 
-
+//Update tree structure below the argument node
 void QuadTree::UpdateTreeStructure(std::shared_ptr<Node> node) {
 
 
@@ -283,5 +285,34 @@ void QuadTree::UpdateTreeStructure(std::shared_ptr<Node> node) {
 	newMidPoints = node->subDivide(node->upLeft, node->boRight, sideLength);
 
 	QuadTreeSubDivide(node, nwNode, swNode, neNode, seNode, sideLength, node);
+
+}
+
+//Recursively search tree for nodes whose COM is > R_MAX
+Point2D QuadTree::QuadTreeIterate(std::shared_ptr<Node> node, Particle p) {
+
+	double dist = checkDistance(node->centMass, p.pos);
+
+	if (dist > R_MAX) {
+		
+		return node->centMass;
+
+	}
+	else {
+		if(node->LocalChildren[0]->hasChildren == true)
+			QuadTreeIterate(node->LocalChildren[0], p);
+		if (node->LocalChildren[1]->hasChildren == true)
+			QuadTreeIterate(node->LocalChildren[1], p);
+		if (node->LocalChildren[2]->hasChildren == true)
+			QuadTreeIterate(node->LocalChildren[2], p);
+		if (node->LocalChildren[3]->hasChildren == true)
+			QuadTreeIterate(node->LocalChildren[3], p);
+	}
+}
+
+
+double QuadTree::checkDistance(Point2D x, Point2D y) {
+
+	return std::sqrt(std::pow(y.x - x.x, 2) + std::pow(y.y - x.y, 2));
 
 }
