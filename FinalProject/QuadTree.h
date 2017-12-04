@@ -17,7 +17,7 @@ public:
 	//Searh Tree
 	//What parameters do we need to be able to search for?
 	std::shared_ptr<Node> TreeSearch();
-	std::vector<std::shared_ptr<Node>> findNodesWParticles(std::shared_ptr<Node> node);
+	//std::vector<std::shared_ptr<Node>> findNodesWParticles(std::shared_ptr<Node> node);
 	std::shared_ptr<Node> rootNode;
 	std::vector<std::shared_ptr<Node>> NodesContainingParticles;
 
