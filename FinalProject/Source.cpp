@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include "QuadTree.h"
 #include <random>
@@ -7,6 +6,7 @@
 #include <memory>
 #include "rk45.h"
 #include <string>
+
 
 
 int main() {
@@ -35,21 +35,21 @@ int main() {
 	double current_time = 0.0;
 	int iter;
 
-	std::cout << std::endl;
-	all_Particles[1].pos.x = 0.0;
-	all_Particles[1].pos.y = 0.0;
-	all_Particles[1].vel.vx = 0.0;
-	all_Particles[1].mass = 5.97*pow(10, 24); // mass of earth in kg
-	all_Particles[0].pos.x = 6783.0e3;
-	all_Particles[0].pos.y = 0.0;
-	all_Particles[0].vel.vx = 0.0;
-	all_Particles[0].vel.vy = 7.67e3;
-	all_Particles[0].mass = 420000.0; // mass of iss in kg
-	all_Particles[2].pos.x = 385000.0e3;
-	all_Particles[2].pos.y = 0.0;
-	all_Particles[2].vel.vx = 0.0;
-	all_Particles[2].vel.vy = 1.022e3;
-	all_Particles[2].mass = 7.35*pow(10, 22); // mass of moon in kg
+	//std::cout << std::endl;
+	//all_Particles[1].pos.x = 0.0;
+	//all_Particles[1].pos.y = 0.0;
+	//all_Particles[1].vel.vx = 0.0;
+	//all_Particles[1].mass = 5.97*pow(10, 24); // mass of earth in kg
+	//all_Particles[0].pos.x = 6783.0e3;
+	//all_Particles[0].pos.y = 0.0;
+	//all_Particles[0].vel.vx = 0.0;
+	//all_Particles[0].vel.vy = 7.67e3;
+	//all_Particles[0].mass = 420000.0; // mass of iss in kg
+	//all_Particles[2].pos.x = 385000.0e3;
+	//all_Particles[2].pos.y = 0.0;
+	//all_Particles[2].vel.vx = 0.0;
+	//all_Particles[2].vel.vy = 1.022e3;
+	//all_Particles[2].mass = 7.35*pow(10, 22); // mass of moon in kg
 
 
 											  //for-loop establishes initial conditions
@@ -61,11 +61,11 @@ int main() {
 											  //all_Particles[i].mass = (0.7 + i / 10.0) * 2 * pow(10, 30); // mass of sun in kg
 											  //}
 
-	std::cout << "Particle 1 Pos: " << all_Particles[0].pos.x << "  " << all_Particles[0].pos.y;
+	/*std::cout << "Particle 1 Pos: " << all_Particles[0].pos.x << "  " << all_Particles[0].pos.y;
 	std::cout << " Particle 1 Vel: " << all_Particles[0].vel.vx << "  " << all_Particles[0].vel.vy;
 	std::cout << std::endl;
 	std::cout << "Particle Masses: " << all_Particles[0].mass << " " << all_Particles[1].mass << " " << all_Particles[2].mass;
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 	// main integration
 	while (current_time<TT) {
 		// for loop runs fg_rk45 for each particle in system
